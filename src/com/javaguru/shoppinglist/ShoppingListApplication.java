@@ -22,11 +22,15 @@ class ShoppingListApplication {
                         System.out.println("Enter product name: ");
                         String name = scanner.nextLine();
                         System.out.println("Enter product price: ");
-                        BigDecimal price = new BigDecimal(scanner.nextLine());
+                        BigDecimal price = new BigDecimal(scanner.nextLine()).setScale(2, BigDecimal.ROUND_HALF_EVEN);
                         Product product = new Product();
                         product.setName(name);
                         product.setPrice(price);
                         product.setId(productIdSequence);
+                        // get user input for new fields (category, discount, description (should be optional)
+                        // add validation for fields as per spec
+                        // for BigDecimal values rounding mode should be one that is used in banks
+                        // BigDecimal(<value>).setScale(2, BigDecimal.ROUND_HALF_EVEN)
                         productRepository.put(productIdSequence, product);
                         productIdSequence++;
                         System.out.println("Result: " + product.getId());
@@ -34,7 +38,7 @@ class ShoppingListApplication {
                         System.out.println("Enter product id: ");
                         long id = scanner.nextLong();
                         Product findProductResult = productRepository.get(id);
-                        System.out.println(findProductResult);
+                        System.out.println(findProductResult.getName());
                     case 3:
                         return;
                 }
