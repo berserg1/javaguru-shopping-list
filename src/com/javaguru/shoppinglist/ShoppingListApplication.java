@@ -7,11 +7,12 @@ import java.util.Scanner;
 
 class ShoppingListApplication {
 
+    private static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) {
         Map<Long, Product> productRepository = new HashMap<>();
         Long productIdSequence = 0L;
         while (true) {
-            Scanner scanner = new Scanner(System.in);
             try {
                 System.out.println("1. Create product");
                 System.out.println("2. Find product by id");
@@ -20,17 +21,25 @@ class ShoppingListApplication {
                 switch (userInput) {
                     case 1:
                         System.out.println("Enter product name: ");
-                        String name = scanner.nextLine();
+                        String nameFromInput = scanner.nextLine();
+                        String name = getNameFromInput(nameFromInput);
                         System.out.println("Enter product price: ");
-                        BigDecimal price = new BigDecimal(scanner.nextLine()).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+                        BigDecimal priceFromInput = new BigDecimal(scanner.nextLine()).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+                        BigDecimal price = getPriceFromInput(priceFromInput);
+                        System.out.println("Enter product category: ");
+                        String category = scanner.nextLine();
+                        System.out.println("Enter product description (optional) or press enter to skip: ");
+                        String description = scanner.nextLine();
+                        System.out.println("Enter product discount as a percentage: ");
+                        Integer discountFromInput = scanner.nextInt();
+                        BigDecimal discount = getDiscountFromInput(discountFromInput);
                         Product product = new Product();
                         product.setName(name);
                         product.setPrice(price);
+                        product.setCategory(category);
+                        product.setDescription(description);
+                        product.setDiscount(discount);
                         product.setId(productIdSequence);
-                        // get user input for new fields (category, discount, description (should be optional)
-                        // add validation for fields as per spec
-                        // for BigDecimal values rounding mode should be one that is used in banks
-                        // BigDecimal(<value>).setScale(2, BigDecimal.ROUND_HALF_EVEN)
                         productRepository.put(productIdSequence, product);
                         productIdSequence++;
                         System.out.println("Result: " + product.getId());
@@ -44,7 +53,32 @@ class ShoppingListApplication {
                 }
             } catch (Exception e) {
                 System.out.println("Error! Please try again.");
+                System.out.println(e.getMessage());
             }
         }
+    }
+
+    private static BigDecimal getPriceFromInput(BigDecimal price) {
+        while (price.compareTo(BigDecimal.ZERO) <= 0) {
+            System.out.println("Price should be greater than zero. Please try again: ");
+            price = new BigDecimal(scanner.nextLine()).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        }
+        return price;
+    }
+
+    private static String getNameFromInput(String name) {
+        while (name.length() < 3 || name.length() > 32) {
+            System.out.println("Name should contain between 3 and 32 characters. Please try again: ");
+            name = scanner.nextLine();
+        }
+        return name;
+    }
+
+    private static BigDecimal getDiscountFromInput(Integer discount) {
+        while (discount.compareTo(100) > 0) {
+            System.out.println("Discount cannot be greater than 100 percent. Please try again: ");
+            discount = scanner.nextInt();
+        }
+        return new BigDecimal(discount / (double) 100).setScale(2, BigDecimal.ROUND_HALF_EVEN);
     }
 }
