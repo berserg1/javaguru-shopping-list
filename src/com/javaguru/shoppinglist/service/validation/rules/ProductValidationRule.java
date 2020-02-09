@@ -8,7 +8,7 @@ public interface ProductValidationRule {
 
     default void checkNotNull(Product product) {
         if (product == null) {
-            throw new IllegalArgumentException("Product must not be null");
+            throw new ProductValidationException("Product must not be null");
         }
     }
 }

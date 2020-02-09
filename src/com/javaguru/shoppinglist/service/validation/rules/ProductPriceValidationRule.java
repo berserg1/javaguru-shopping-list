@@ -5,9 +5,12 @@ import com.javaguru.shoppinglist.domain.Product;
 import java.math.BigDecimal;
 
 public class ProductPriceValidationRule implements ProductValidationRule {
+
+    private final static BigDecimal MIN_PRICE = BigDecimal.valueOf(0);
+
     @Override
     public void validate(Product product) {
-        if (product.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+        if (product.getPrice().compareTo(MIN_PRICE) <= 0) {
             throw new IllegalArgumentException("Product price should be greater than zero.");
         }
     }
