@@ -18,6 +18,4 @@ public class ProductService {
     public Product getProduct(Long id) {
         return repository.findById(id);
     }
-
-
 }

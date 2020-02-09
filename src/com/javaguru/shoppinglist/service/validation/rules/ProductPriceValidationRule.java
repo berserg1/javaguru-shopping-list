@@ -10,6 +10,7 @@ public class ProductPriceValidationRule implements ProductValidationRule {
 
     @Override
     public void validate(Product product) {
+        checkNotNull(product);
         if (product.getPrice().compareTo(MIN_PRICE) <= 0) {
             throw new IllegalArgumentException("Product price should be greater than zero.");
         }
